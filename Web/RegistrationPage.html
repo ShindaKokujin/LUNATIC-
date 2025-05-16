@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration form</title>
+    <style>
+        :root {
+            /* Colors */
+            --green-light: #6d9773;
+            --green-dark: #0c3b2e;
+            --brown: #bb8a52;
+            --yellow: #ffba00;
+            --white: #ffffff;
+            --primary-color: #0c3b2e;
+            --section-bg: #f5f5f5;
+
+            /* Spacing */
+            --spacing-xs: 5px;
+            --spacing-sm: 8px;
+            --spacing-md: 15px;
+            --spacing-lg: 20px;
+            --spacing-xl: 30px;
+
+            /* UI Elements */
+            --border-radius: 8px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --input-padding: 12px 15px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "DM Sans", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(13, 59, 46, 0.8), rgba(13, 59, 46, 0.8)), 
+            url('https://cptlyne.com/wp-content/uploads/2021/08/how-to-say-hello-100-languages-4-2048x1152.png') no-repeat center center fixed;
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--spacing-xl);
+        }
+
+        .wrapper {
+            max-width: 800px;
+            width: 100%;
+            background: var(--green-dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            border: 2px solid var(--brown);
+        }
+
+        .title {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: var(--spacing-lg) var(--spacing-xl);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--brown);
+        }
+
+        .title h1 {
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .title h1 a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .title h1 a:hover {
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+        }
+
+        .title .subtitle {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .title h2 {
+            font-size: 24px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .form {
+            padding: var(--spacing-xl);
+            background: var(--green-dark);
+        }
+
+        /* Progress Bar Styles */
+        .progress-container {
+            width: 100%;
+            background-color: rgba(109, 151, 115, 0.3);
+            border-radius: 10px;
+            margin: var(--spacing-lg) 0;
+            height: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--yellow), var(--brown));
+            transition: width 0.4s ease;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xl);
+            position: relative;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--green-dark);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            z-index: 2;
+            border: 2px solid var(--brown);
+            transition: all 0.3s ease;
+        }
+
+        .step-circle.active {
+            background-color: var(--yellow);
+            color: var(--green-dark);
+            border-color: var(--yellow);
+        }
+
+        .step-circle.completed {
+            background-color: var(--brown);
+            border-color: var(--brown);
+        }
+
+        .step-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--brown);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .step-line-progress {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 2px;
+            background-color: var(--yellow);
+            z-index: 1;
+            transform: translateY(-50%);
+            transition: width 0.4s ease;
+        }
+
+        /* Form sections */
+        .form-section {
+            margin-bottom: var(--spacing-xl);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 1px solid var(--brown);
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section h2 {
+            font-size: 18px;
+            color: var(--yellow);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--brown);
+        }
+
+        .inputfield {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .inputfield label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--white);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: var(--input-padding);
+            border: 1px solid var(--brown);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            transition: var(--transition);
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--green-dark);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--yellow);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 186, 0, 0.3);
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .radio-group label,
+        .checkbox-group label {
+            color: var(--white);
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            accent-color: var(--yellow);
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            margin-top: var(--spacing-lg);
+        }
+
+        .terms label {
+            color: var(--white);
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-xl);
+        }
+
+        .form-button {
+            background: var(--yellow);
+            color: var(--green-dark);
+            padding: var(--input-padding);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: var(--transition);
+            border: 1px solid var(--brown);
+            flex: 1;
+            margin: 0 var(--spacing-sm);
+        }
+
+        .form-button:hover {
+            background: var(--brown);
+            color: var(--white);
+        }
+
+        .form-button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            color: #666666;
+        }
+
+        ::placeholder {
+            color: var(--brown);
+            opacity: 0.7;
+        }
+
+        select option {
+            background-color: var(--white);
+            color: var(--green-dark);
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--spacing-md);
+            }
+
+            .radio-group,
+            .checkbox-group {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+            
+            .wrapper {
+                margin: 0 15px;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+
+            .form-button {
+                width: 100%;
+                margin: var(--spacing-sm) 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="title">
+        <h1><a href="LoginTuition.html">Tuition</a></h1>
+        <div class="subtitle">
+            <h2>Student Registration Form</h2>
+        </div>
+    </div>
+
+    <form method="POST" action="#" data-netlify="true" name="student-registration-form">
+        <div class="form">
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step-line"></div>
+                <div class="step-line-progress" id="stepLineProgress"></div>
+                <div class="step-circle active" id="step1Indicator">1</div>
+                <div class="step-circle" id="step2Indicator">2</div>
+                <div class="step-circle" id="step3Indicator">3</div>
+                <div class="step-circle" id="step4Indicator">4</div>
+            </div>
+
+            <!-- Step 1: Personal Information -->
+            <div class="form-section active" id="step1">
+                <h2>Personal Information</h2>
+                <div class="inputfield">
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+
+                <div class="inputfield">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" name="phone" id="phone" required>
+                </div>
+
+                <div class="inputfield">
+                    <label for="address">Address:</label>
+                    <input type="text" name="address" id="address" required>
+                </div>
+
+                <div class="inputfield">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="form-button" id="nextBtn1">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Language Information -->
+            <div class="form-section" id="step2">
+                <h2>Language Information</h2>
+                <div class="inputfield">
+                    <label for="language">Language:</label>
+                    <select id="language" name="language" required>
+                        <option value="">Select a language</option>
+                        <option value="mandarin">Mandarin</option>
+                        <option value="arabic">Arabic</option>
+                        <option value="japanese">Japanese</option>
+                    </select>
+                </div>
+
+                <div class="inputfield">
+                    <label>Proficiency Level:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="proficiency" value="beginner" id="beginner" required> Beginner</label>
+                        <label><input type="radio" name="proficiency" value="intermediate" id="intermediate"> Intermediate</label>
+                        <label><input type="radio" name="proficiency" value="advanced" id="advanced"> Advanced</label>
+                    </div>
+                </div>
+
+                <div class="inputfield">
+                    <label>Preferred Class Time:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="time" value="day" id="day"> Day</label>
+                        <label><input type="checkbox" name="time" value="night" id="night"> Night</label>
+                    </div>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="form-button" id="prevBtn2">Previous</button>
+                    <button type="button" class="form-button" id="nextBtn2">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Motivation -->
+            <div class="form-section" id="step3">
+                <h2>Motivation</h2>
+                <div class="inputfield">
+                    <label>Why are you learning this language?</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="reason" value="work" id="work"> Work</label>
+                        <label><input type="checkbox" name="reason" value="travel" id="travel"> Travel</label>
+                        <label><input type="checkbox" name="reason" value="interest" id="interest"> Personal Interest</label>
+                        <label><input type="checkbox" name="reason" value="other" id="other"> Other</label>
+                    </div>
+                </div>
+
+                <div class="inputfield" id="otherReasonField">
+                    <label for="otherReason">If other, please specify:</label>
+                    <input type="text" name="otherReason" id="otherReason">
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="form-button" id="prevBtn3">Previous</button>
+                    <button type="button" class="form-button" id="nextBtn3">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Terms and Submit -->
+            <div class="form-section" id="step4">
+                <h2>Terms and Conditions</h2>
+                <div class="inputfield terms">
+                    <label>
+                        <input type="checkbox" name="check" id="termsCheckbox" required>
+                        I hereby declare that the above information provided is true and correct.
+                    </label>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="form-button" id="prevBtn4">Previous</button>
+                    <button type="submit" class="form-button">Submit Registration</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const steps = document.querySelectorAll('.form-section');
+        const stepIndicators = document.querySelectorAll('.step-circle');
+        const progressBar = document.getElementById('progressBar');
+        const stepLineProgress = document.getElementById('stepLineProgress');
+        let currentStep = 0;
+        const totalSteps = steps.length;
+
+        // Initialize
+        updateProgress();
+
+        // Next button functionality
+        document.getElementById('nextBtn1').addEventListener('click', () => validateStep(1));
+        document.getElementById('nextBtn2').addEventListener('click', () => validateStep(2));
+        document.getElementById('nextBtn3').addEventListener('click', () => validateStep(3));
+
+        // Previous button functionality
+        document.getElementById('prevBtn2').addEventListener('click', () => prevStep());
+        document.getElementById('prevBtn3').addEventListener('click', () => prevStep());
+        document.getElementById('prevBtn4').addEventListener('click', () => prevStep());
+
+        // Other reason field toggle
+        document.getElementById('other').addEventListener('change', function() {
+            document.getElementById('otherReasonField').style.display = this.checked ? 'block' : 'none';
+        });
+
+        function validateStep(nextStep) {
+            let isValid = true;
+            
+            // Validate current step before proceeding
+            switch(currentStep) {
+                case 0:
+                    if (!document.getElementById('name').value ||
+                        !document.getElementById('phone').value ||
+                        !document.getElementById('address').value ||
+                        !document.getElementById('email').value) {
+                        isValid = false;
+                        alert('Please fill in all personal information fields');
+                    }
+                    break;
+                case 1:
+                    if (!document.getElementById('language').value ||
+                        !document.querySelector('input[name="proficiency"]:checked') ||
+                        !document.querySelector('input[name="time"]:checked')) {
+                        isValid = false;
+                        alert('Please complete all language information fields');
+                    }
+                    break;
+                case 2:
+                    if (!document.querySelector('input[name="reason"]:checked')) {
+                        isValid = false;
+                        alert('Please select at least one reason for learning the language');
+                    } else if (document.getElementById('other').checked && 
+                              !document.getElementById('otherReason').value) {
+                        isValid = false;
+                        alert('Please specify your other reason');
+                    }
+                    break;
+            }
+
+            if (isValid) {
+                currentStep = nextStep;
+                updateProgress();
+            }
+        }
+
+        function prevStep() {
+            currentStep--;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            // Update active step
+            steps.forEach((step, index) => {
+                step.classList.toggle('active', index === currentStep);
+            });
+
+            // Update step indicators
+            stepIndicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentStep);
+                indicator.classList.toggle('completed', index < currentStep);
+            });
+
+            // Update progress bar
+            const progressPercentage = ((currentStep + 1) / totalSteps) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            
+            // Update step line progress
+            const lineProgressPercentage = (currentStep / (totalSteps - 1)) * 100;
+            stepLineProgress.style.width = `${lineProgressPercentage}%`;
+        }
+    });
+</script>
+</body>
+</html>
